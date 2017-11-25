@@ -2,7 +2,10 @@ from flask import Flask, render_template, request, url_for, redirect
 
 from flask.ext.sqlalchemy import SQLAlchemy
 
-from sqlalchemy.orm import relationship
+from threading import Timer
+import time
+
+from sqlalchemy.orm import relationship, session
 
 from datetime import date, datetime
 
@@ -30,13 +33,14 @@ db.create_all()
 def procImagem(url):
     img = Imagem.query.filter_by(url=url).first()
     print(img.processada)
+
     while img.processada == 0:
-        img = Imagem.query.filter_by(url=url).first()
-        
-    if img.processada == 1:
-        print(img.result)
-        return True
+        Imagem.session.close()       
+        img = Imagem.query.filter_by(url=url).first()  
     
+    if img.processada == 1:
+        print(img.processada)
+
 
 
 @app.route("/processamento/<string:url>", methods=['GET', 'POST'])
@@ -52,12 +56,17 @@ def processamento(url):
             db.session.commit()
 
     
-    if procImagem(myUrl):
-        img = Imagem.query.filter_by(url=myUrl).first
-                    
-    print(img.result)
-    return img.result              
 
+
+    procImagem(myUrl)
+       # img = Imagem.query.filter_by(url=myUrl).first
+
+
+
+  #  print(img.result)
+  #  return img.result              
+    print(img.result)
+    return img.result
 
 
 
