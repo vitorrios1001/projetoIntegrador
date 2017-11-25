@@ -30,11 +30,15 @@ def processamento():
     if request.method == "POST":
         
         u = request.data
-             
-        x = 'http://tudosobrecachorros.com.br/wp-content/uploads/cachorro-independente.jpg'
-        print(request.method)
-        print(u)
-        body = "{'url':'"+x+"'}"
+        resp = str(u)            
+                
+        resp = list(resp)
+        resp.pop(0)
+        resp.pop(0)
+        resp.pop(len(resp)-1)
+        url = ''.join(resp)
+        
+        body = "{'url':'"+url+"'}"
         
         try:
             # Execute the REST API call and get the response.
@@ -45,17 +49,17 @@ def processamento():
 
             # 'data' contains the JSON data. The following formats the JSON data for display.
             parsed = json.loads(data)
-            #print ("Response:")
-            #print = (json.dumps(parsed, sort_keys=True, indent=2))
-            print('ok')
+            #print("Response:")
+            #print = (json.dumps(parsed, sort_keys=True, indent=2))            
             #return (json.dumps(parsed, sort_keys=True, indent=2))
+            
             conn.close()
 
         except Exception as e:
             print('Error:')
             print(e)
             
-    return data
+        return data
 
 if __name__ == "__main__":
     app.run(debug=True)
