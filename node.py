@@ -25,21 +25,39 @@ params = urllib.parse.urlencode({
 
 # Replace the three dots below with the URL of a JPEG image of a celebrity.
 @app.route("/node/", methods=['GET', 'POST'])
-def processamento():
+def node():
 
     if request.method == "POST":
         
         u = request.data
-        resp = str(u)            
-                
+        resp = str(u) 
+            
+
+        print("Recebi isso: ")          
+        print(u)        
         resp = list(resp)
         resp.pop(0)
         resp.pop(0)
+        resp.pop(0)
+        resp.pop(0)
+        resp.pop(0)
+        resp.pop(0)
+        resp.pop(0)
+        resp.pop(0)
+        resp.pop(0)
+        resp.pop(0)
+        resp.pop(0)
+        resp.pop(len(resp)-1)
+        resp.pop(len(resp)-1)
+        resp.pop(len(resp)-1)
+        resp.pop(len(resp)-1)
         resp.pop(len(resp)-1)
         url = ''.join(resp)
-        
+        print("Converti nisso: ")
+        print(url)
         body = "{'url':'"+url+"'}"
-        
+        print("Esse é o body: ")
+        print(body)
         try:
             # Execute the REST API call and get the response.
             conn = http.client.HTTPSConnection('westcentralus.api.cognitive.microsoft.com')
@@ -50,7 +68,7 @@ def processamento():
             # 'data' contains the JSON data. The following formats the JSON data for display.
             parsed = json.loads(data)
             #print("Response:")
-            #print = (json.dumps(parsed, sort_keys=True, indent=2))            
+            #print(json.dumps(parsed, sort_keys=True, indent=2))            
             #return (json.dumps(parsed, sort_keys=True, indent=2))
             
             conn.close()
@@ -58,8 +76,15 @@ def processamento():
         except Exception as e:
             print('Error:')
             print(e)
-            
-        return data
+
+        x = data
+        x = str(x)  
+        print("Tipo: ")
+        print(x) 
+        
+        
+        return x
+
 
 if __name__ == "__main__":
     app.run(debug=True)

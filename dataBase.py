@@ -1,79 +1,58 @@
-from flask import Flask, render_template, request, url_for, redirect
+import http.client, urllib.request, urllib.parse, urllib.error, base64, json
+from flask import Flask, render_template, request, url_for, redirect,jsonify
+import requests
+#from flask.ext.sqlalchemy import SQLAlchemy
 
-from flask.ext.sqlalchemy import SQLAlchemy
+#from sqlalchemy.orm import relationship, session
 
-from threading import Timer
-import time
-
-from sqlalchemy.orm import relationship, session
-
-from datetime import date, datetime
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@localhost/projetoIntegrador'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@localhost/projetoIntegrador'
 
-db = SQLAlchemy(app)
+#db = SQLAlchemy(app)
 
-class Imagem(db.Model):
-    __tablename__='TBLIMG'
-    _id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    url = db.Column(db.Text(255))    
-    processada = db.Column(db.Integer)
-    result = db.Column(db.Text(100000))
+#class Imagem(db.Model):
+ #   __tablename__='TBLIMG'
+ #   _id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+ #   url = db.Column(db.Text(255))    
+ #   processada = db.Column(db.Integer)
+ #   result = db.Column(db.Text(100000))
     
-    def __init__(self,url, processada, result):
-        self.url = url
-        self.processada = processada
-        self.result = result
+ #   def __init__(self,url, processada, result):
+  
+  #      self.url = url
+  #      self.processada = processada
+  #      self.result = result
 
-db.create_all()
+#db.create_all()
 
-
-def procImagem(url):
-    img = Imagem.query.filter_by(url=url).first()
-    print(img.processada)
-
-    while img.processada == 0:
-        Imagem.session.close()       
-        img = Imagem.query.filter_by(url=url).first()  
+@app.route("/processamento/", methods=['GET', 'POST'])
+def processamento():
     
-    if img.processada == 1:
-        print(img.processada)
-
-
-
-@app.route("/processamento/<string:url>", methods=['GET', 'POST'])
-def processamento(url):
-    
-    if request.method == "GET":
-        myUrl = url
-        processada = 0
-        result = ""
-        if myUrl:
-            img = Imagem(myUrl,processada,result)
-            db.session.add(img)
-            db.session.commit()
-
-    
-
-
-    procImagem(myUrl)
-       # img = Imagem.query.filter_by(url=myUrl).first
-
-
-
-  #  print(img.result)
-  #  return img.result              
-    print(img.result)
-    return img.result
-
-
-
-
+    if request.method == "POST":
+            
+        u = request.data
+        resp = str(u)            
+                
+        resp = list(resp)
+        
+        resp.pop(0)
+        resp.pop(0)
+        
+        resp.pop(len(resp)-1)        
+        url = ''.join(resp)
+        #print(url)
+        
+        payload = {'b':"'"+url+"'"}
+      
+        r = requests.post('http://localhost:5000/node/',data = json.dumps(payload))
+        result = json.dumps(r)
+        return result
+        
 
 
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=3000)
