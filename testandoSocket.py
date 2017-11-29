@@ -65,42 +65,30 @@ def processamento():
         
         for node in listaDeHosts:
             
-            teste = Thread(target=ProcessaImagem())
+            teste = Thread(target=ProcessaImagem)
             teste.setDaemon(True)
             teste.start()
             print 'Eu startei a thread com host: '+node  
-            
+
         
-        #i = 0
-        #while i < fila.qsize():
-      
-        #    node = Thread(target=ProcessaImagem())
-        #    node.setDaemon(True)
-        #    node.start()
-        #    print 'Eu startei a thread com host: '+fila(i) 
-        fila.join()
+        
+        i = 0
+        while i < fila.qsize():              
+            fila.join()
+        
+        
         print "Finalizou"
         
         processou = False
         
         while not processou:
-            print(processado)
-            print(processou)
             if processado == True:
                 r = processamento
                 processou = True    
         
         print(processamento)    
         return processamento
-        
-        
-
-        #resp = r.json()
-        
-        #jstr = json.dumps(resp,ensure_ascii=True, indent=2)
-              
-       
-        
+     
         
 
 #funcao para consumir a fila
@@ -110,9 +98,7 @@ def ProcessaImagem():
     job = fila.get() #pega o primeiro job livre
     sleep(random.randint(1,3)) #espera
     print 'Sou o host: '+job.host
-    #body = "http://"+job.host+":5000/node/"
-    #print "Body: "
-    #print(body)
+
     r = requests.post(job.host, data = job.url )
     
     if processado == False:
