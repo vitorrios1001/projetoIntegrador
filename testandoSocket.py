@@ -44,11 +44,11 @@ def processamento():
    
         #r = requests.post('http://localhost:5000/node/', data = teste)
         
-        host1 = 'http://192.168.15.2:5000/node/'
-        host2 = 'http://192.168.15.7:5000/node/'
+        host1 = 'http://172.10.10.100:5000/node/'
+        host2 = 'http://172.10.10.102:5000/node/'
         
 
-        listaDeHosts = [host1, host2]
+        listaDeHosts = [host1,host2]
              
         
         #Empilhando objetos node para processamento
@@ -95,8 +95,8 @@ def processamento():
 def ProcessaImagem():
     global processado
     global processamento
-    job = fila.get() #pega o primeiro job livre
-    sleep(random.randint(1,3)) #espera
+    job = fila.get() 
+    sleep(random.randint(1,3)) 
     print 'Sou o host: '+job.host
 
     r = requests.post(job.host, data = job.url )
@@ -116,6 +116,6 @@ def ProcessaImagem():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=3000)
+    app.run(debug=True, port=3000,host="172.10.10.102")
 
 
